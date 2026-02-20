@@ -28,7 +28,7 @@ let version = [
     Bundle.main.infoDictionary?["CFBundleVersion"] as? String,
 ]
 .compactMap { $0 ?? "?" }
-.joined(separator: ".")
+.joined(separator: " ")
 
 let bundleIdentifier = Bundle.main.bundleIdentifier!
 logger.info("Asspp \(bundleIdentifier) \(version) starting up...")

@@ -112,14 +112,17 @@ struct AddAccountView: View {
 
     func authenticate() {
         openProgress = true
+        logger.info("starting authentication for user")
         Task {
             defer { DispatchQueue.main.async { openProgress = false } }
             do {
                 _ = try await vm.authenticate(email: email, password: password, code: code.isEmpty ? "" : code)
+                logger.info("authentication successful for user")
                 await MainActor.run {
                     dismiss()
                 }
             } catch {
+                logger.error("authentication failed: \(error.localizedDescription)")
                 await MainActor.run {
                     self.error = error
                     codeRequired = true

@@ -32,6 +32,7 @@
 
         func loadDevices() async {
             resetError()
+            logger.info("loading devices")
             do {
                 let devices = try await DeviceCTL.listDevices()
                     .filter { [.iPad, .iPhone].contains($0.type) }
@@ -40,7 +41,9 @@
                     selectedDeviceID = devices.first?.id
                 }
                 self.devices = devices
+                logger.info("found \(devices.count) devices")
             } catch {
+                logger.warning("failed to load devices: \(error)")
                 updateError(error)
             }
         }
@@ -48,13 +51,16 @@
         func install(ipa: URL, to device: DeviceCTL.Device) async -> Bool {
             resetError()
             let process = Process()
+            logger.info("installing \(ipa.lastPathComponent) to \(device.name)")
 
             await MainActor.run { busyDevices[device] = process }
             let result: Bool
             do {
                 try await DeviceCTL.install(ipa: ipa, to: device, process: process)
+                logger.info("install succeeded for \(device.name)")
                 result = true
             } catch {
+                logger.warning("install failed for \(device.name): \(error)")
                 updateError(error)
                 result = false
             }
@@ -119,7 +125,7 @@
                 do {
                     try await _checkForUpdate(app, for: device, process: process)
                 } catch {
-                    logger.warning("failed to update \(app.info.id), error: \(error)")
+                    logger.warning("failed to update \(app.info.id): \(error)")
                     app.state = .error(error.localizedDescription)
                     try? await Task.sleep(for: .seconds(1))
                 }

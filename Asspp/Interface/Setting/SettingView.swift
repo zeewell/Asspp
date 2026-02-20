@@ -93,6 +93,16 @@ struct SettingView: View {
             #endif
 
             Section {
+                NavigationLink("Logs") {
+                    LogView()
+                }
+            } header: {
+                Text("Diagnostics")
+            } footer: {
+                Text("View application logs for troubleshooting.")
+            }
+
+            Section {
                 Button("@Lakr233") {
                     #if canImport(UIKit)
                         UIApplication.shared.open(URL(string: "https://twitter.com/Lakr233")!)

@@ -41,6 +41,7 @@ class AppStore: ObservableObject {
             do {
                 let systemIdentifier = try ApplePackage.DeviceIdentifier.system()
                 deviceIdentifier = systemIdentifier
+                logger.info("obtained system device identifier")
             } catch {
                 logger.warning("failed to get system device identifier, falling back to random one: \(error)")
                 let randomIdentifier = ApplePackage.DeviceIdentifier.random()
@@ -54,6 +55,7 @@ class AppStore: ObservableObject {
     @MainActor
     @discardableResult
     func save(email: String, account: ApplePackage.Account) -> UserAccount {
+        logger.info("saving account for user")
         let account = UserAccount(account: account)
         accounts = (accounts.filter { $0.account.email != email } + [account])
             .sorted { $0.account.email < $1.account.email }
@@ -62,6 +64,7 @@ class AppStore: ObservableObject {
 
     @MainActor
     func delete(id: UserAccount.ID) {
+        logger.info("deleting account id: \(id)")
         accounts = accounts.filter { $0.id != id }
     }
 

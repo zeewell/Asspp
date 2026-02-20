@@ -144,7 +144,7 @@ class Installer: Identifiable, ObservableObject, @unchecked Sendable {
 
     func destroy() {
         guard !app.didShutdown else { return }
-        logger.info("installer destroy")
+        logger.info("destroying installer id: \(id)")
         Task.detached {
             await self.app.server.shutdown()
             try await self.app.asyncShutdown()

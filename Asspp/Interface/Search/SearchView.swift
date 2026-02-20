@@ -163,6 +163,7 @@ struct SearchView: View {
         searchKeyFocused = false
         searching = true
         searchInput = "\(searchRegion) - \(searchKey)" + " ..."
+        logger.info("search: term=\(searchKey) region=\(searchRegion) type=\(searchType.rawValue)")
         Task {
             do {
                 var result = try await ApplePackage.Searcher.search(
@@ -177,12 +178,14 @@ struct SearchView: View {
                 ) {
                     result.insert(app, at: 0)
                 }
+                logger.info("search completed: \(result.count) results for term=\(searchKey)")
                 await MainActor.run {
                     searching = false
                     searchResult = result.map { AppStore.AppPackage(software: $0) }
                     searchInput = "\(searchRegion) - \(searchKey)"
                 }
             } catch {
+                logger.error("search failed: term=\(searchKey) error=\(error.localizedDescription)")
                 await MainActor.run {
                     searching = false
                     searchResult = []

@@ -10,11 +10,18 @@ import Digger
 import Logging
 import SwiftUI
 
+LoggingSystem.bootstrap { label in
+    LogManagerHandler(label: label)
+}
+
 let logger = {
     var logger = Logger(label: "wiki.qaq.asspp")
     logger.logLevel = .debug
     return logger
 }()
+
+APLogger.verbose = true
+APLogger.logger = Logger(label: "wiki.qaq.asspp.applepackage")
 
 let version = [
     Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
@@ -25,6 +32,7 @@ let version = [
 
 let bundleIdentifier = Bundle.main.bundleIdentifier!
 logger.info("Asspp \(bundleIdentifier) \(version) starting up...")
+logger.info("Platform: \(ProcessInfo.processInfo.operatingSystemVersionString)")
 
 private let availableDirectories = FileManager
     .default

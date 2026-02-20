@@ -57,20 +57,20 @@ class Downloads: NSObject, ObservableObject {
     }
 
     func add(request: PackageManifest) -> PackageManifest {
-        logger.info("adding download request \(request.id)")
+        logger.info("adding download request \(request.id) - \(request.package.software.name)")
         manifests.removeAll { $0.id == request.id }
         manifests.append(request)
         return request
     }
 
     func suspend(request: PackageManifest) {
-        logger.info("suspending download request id: \(request)")
+        logger.info("suspending download request id: \(request.id)")
         DiggerManager.shared.cancelTask(for: request.url)
         request.state.resetIfNotCompleted()
     }
 
     func resume(request: PackageManifest) {
-        logger.info("resuming download request id: \(request)")
+        logger.info("resuming download request id: \(request.id)")
         request.state.start()
         DiggerManager.shared.download(with: request.url)
             .speed { speedBytes in
@@ -131,7 +131,7 @@ class Downloads: NSObject, ObservableObject {
         try FileManager.default.moveItem(at: downloadedFile, to: tempFile)
         defer { try? FileManager.default.removeItem(at: tempFile) }
 
-        logger.info("injecting signatures:\(manifest.id)")
+        logger.info("injecting signatures: \(manifest.id)")
         try await SignatureInjector.inject(sinfs: manifest.signatures, into: tempFile.path)
 
         logger.info("moving finalized file: \(manifest.id)")
@@ -139,7 +139,7 @@ class Downloads: NSObject, ObservableObject {
     }
 
     func delete(request: PackageManifest) {
-        logger.info("deleting download request id: \(request)")
+        logger.info("deleting download request id: \(request.id)")
         suspend(request: request)
         request.delete()
         manifests.removeAll(where: { $0.id == request.id })

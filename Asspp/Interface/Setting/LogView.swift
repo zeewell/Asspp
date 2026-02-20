@@ -1,0 +1,46 @@
+//
+//  LogView.swift
+//  Asspp
+//
+//  Created on 2026/2/20.
+//
+
+import SwiftUI
+
+struct LogView: View {
+    @State private var messages: [String] = []
+    @State private var showSensitiveWarning = false
+
+    private func fill() {
+        messages = LogManager.shared.getMessages()
+    }
+
+    var body: some View {
+        List {
+            ForEach(Array(messages.enumerated()), id: \.offset) { _, line in
+                Text(line)
+                    .font(.system(.footnote, design: .monospaced))
+                    .lineLimit(nil)
+                    .textSelection(.enabled)
+            }
+        }
+        .listStyle(.plain)
+        .navigationTitle("Logs")
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button(action: { fill() }) {
+                    Image(systemName: "arrow.clockwise")
+                }
+            }
+        }
+        .onAppear {
+            fill()
+            showSensitiveWarning = true
+        }
+        .alert("Sensitive Content", isPresented: $showSensitiveWarning) {
+            Button("I Understand", role: .cancel) {}
+        } message: {
+            Text("Logs may contain sensitive account information. Do not screenshot or share them to avoid leaking your credentials.")
+        }
+    }
+}

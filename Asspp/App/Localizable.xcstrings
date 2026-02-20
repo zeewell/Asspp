@@ -758,6 +758,9 @@
         }
       }
     },
+    "Diagnostics" : {
+
+    },
     "Direct Download" : {
       "localizations" : {
         "en" : {
@@ -1102,6 +1105,9 @@
         }
       }
     },
+    "I Understand" : {
+
+    },
     "If you fail to acquire a license for a product, rotating the password token may help. This will use the initial password to authenticate with the App Store again." : {
       "localizations" : {
         "en" : {
@@ -1324,6 +1330,12 @@
           }
         }
       }
+    },
+    "Logs" : {
+
+    },
+    "Logs may contain sensitive account information. Do not screenshot or share them to avoid leaking your credentials." : {
+
     },
     "Manage downloads." : {
       "localizations" : {
@@ -1993,6 +2005,9 @@
         }
       }
     },
+    "Sensitive Content" : {
+
+    },
     "Settings" : {
       "localizations" : {
         "en" : {
@@ -2354,6 +2369,9 @@
           }
         }
       }
+    },
+    "View application logs for troubleshooting." : {
+
     },
     "Welcome to Asspp" : {
       "localizations" : {
